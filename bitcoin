@@ -6,7 +6,7 @@ def get_balance(ticker):
                 return float(b['balance'])
             else:
                 return 0
-
+66665
 ##half-half
 #def half_half(Ticker):
 import time
