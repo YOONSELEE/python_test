@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan 27 02:37:08 2022
+
+@author: LEE
+"""
+
 def get_balance(ticker):
     balances = upbit.get_balances()
     for b in balances:
@@ -7,7 +14,7 @@ def get_balance(ticker):
             else:
                 return 0
 
-##half-half 9999999
+##half-half
 #def half_half(Ticker):
 import time
 import pyupbit
@@ -16,8 +23,8 @@ import key
 import numpy as np
 import pandas as pd
 flag = "KRW"
-
-
+a=0
+b=0
 
 while True:
     try:
@@ -31,58 +38,100 @@ while True:
         buy_price = float(format(upbit.get_amount('ALL')))*1.0005
         sell_price = float(pyupbit.get_current_price(["KRW-BTC"]))*float(format(upbit.get_balance(ticker="KRW-BTC")))*0.9995
         sell_cond = sell_price-buy_price
+        
+        num_count = 5
 
-        num_count = 10
-        down_ratio = 0.998
-        up_ratio = 1.002
 
         ticker = "KRW-BTC"
         ticker_origin = "BTC"
         
         n = 0
+        m=0
+        k=0
+        
         df = pyupbit.get_ohlcv(ticker,interval="minute1",count=num_count)
-        red = df['close']-df['open']                  #양수면 빨간막대, 음수면 파란 막대
-
-
+        s_mid=(df['open']+df['close'])/2
+        h_mid=(df['high']+df['low'])/2
+        s=[]
+        h=[]
+        red=df['close']-df['open']  #양수면 빨강, 음수면 파랑
+        
 ##매수 조건
-        for i in list(range(0,num_count)):
-            if (red[i]<=0):
+        for i in list(range(1,num_count)):
+            if (s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락세
                 n=n+1
-            else:
-                n=n
-
-        if (n>=9 and df['open'][0]>=df['close'][-1] and float(format(upbit.get_balance(ticker="KRW")))>=6000):
+            elif (red[-i]<=0 and red[-i-1]<=0 and s_mid[-i]-s_mid[-i-1]>=0):    #중점이 상승이지만 파,파 경우
+                n=n+1
+            elif (red[-i]<0 and red[-i-1]>0 and 0<s_mid[-i]-s_mid[-i-1]<15000):    #중점이 상승이여도 빨,파&미미
+                n=n+1
+            elif (red[-i]>0 and red[-i-1]<0 and 0<s_mid[-i]-s_mid[-i-1]<15000):    #중점이 상승이여도 파,빨&미미
+                n=n+1
+            elif (red[-i]>0 and red[-i-1]>0):                                   #중점 상승이면서 빨,빨
+                m=m+1
+            elif (red[-i]>0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]>=15000):   #중점 상승 이면서 파,빨&큰폭
+                m=m+1
+            elif (red[-i]<0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]>=15000):   #그 외 케이스(이상 현상)
+                k=k+1
+                
+                
+        if (n==4):
+                print("아직 하락중")
+        elif (n==3 and m==1 and red[-1]>0 and red[-2]>0 and float(format(upbit.get_balance(ticker="KRW")))>=6000):
             print(now)
-            print("종가가" , df['close'][-1] , "원 일때 매수 하였습니다.")
             upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
             buy=buy_price
             print("매수가+수수료 : " , buy_price)
             print("매수가 : ", float(format(upbit.get_amount('ALL'))))
             print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
-            
-           #time.sleep(550)
-        n=0
-    
-##매도 조건
-        for i in list(range(0,num_count)):
-            if (red[i]>0):
-                n=n+1
-            else:
-                n=n
-
-        if (n>=5 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.002):
-            upbit.sell_market_order(ticker,get_balance(ticker_origin))
+        elif (n==3 and m==1 and red[-1]>0 and red[-2]<0 and s_mid[-1]-s_mid[-2]>=15000 and float(format(upbit.get_balance(ticker="KRW")))>=6000:
             print(now)
-            print("시가가" , df['open'][-1] , "원 일때 매도 하였습니다.")
+            upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
+            buy=buy_price
+            print("매수가+수수료 : " , buy_price)
+            print("매수가 : ", float(format(upbit.get_amount('ALL'))))
+            print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+                
+        n=0
+        m=0
+        k=0
+        
+##매도 조건
+        for i in list(range(1,num_count)):
+            if (s_mid[-i]-s_mid[-i-1]>=0):                      #중점이 상승세
+                n=n+1
+            elif (red[-i]>=0 and red[-i-1]>=0 and s_mid[-i]-s_mid[-i-1]<=0):     #중점이 하락이지만 빨,빨 경우
+                n=n+1
+            elif (red[-i]<0 and red[-i-1]>0 and -5000<s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락이지만 빨,파 & 미미
+                n=n+1
+            elif (red[-i]>0 and red[-i-1]<0 and 0>s_mid[-i]-s_mid[-i-1]>-15000):  #중점이 하락이지만 파,빨&미미
+                n=n+1
+            elif (red[-i]<0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]<0):        #중점이 하락이면서 파,파
+                m=m+1
+            elif (red[-i]<0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]<=-15000):   #중점 하락이면서 빨,파 &큰폭
+                m=m+1
+            elif (red[-i]>0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]<=-15000):   #그 외 케이스(이상 현상)
+                k=k+1
+               
+                
+        if (n==4):
+                print("아직 상승중")
+        elif (n==3 and m==1 and red[-1]<0 and red[-2]<0 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.002):
+            print(now)
+            upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
-            time.sleep(550)
+        elif (n==3 and m==1 and red[-1]<0 and red[-2]>0 and s_mid[-1]-s_mid[-2]<=-15000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.002):
+            print(now)
+            upbit.sell_market_order(ticker,get_balance(ticker_origin))
+            print(sell_cond ,"원 수익.")
+            print(sell_cond*100/buy_price,"% 수익")
+            
         n=0
+        m=0
+        k=0
               
-#              print("보유 KRW : {}".format(upbit.get_balance(ticker="KRW")))          # 보유 KRW
-#              print("총매수금액 : {}".format(upbit.get_amount('ALL')))                # 총매수금액
-#              print("비트수량 : {}".format(upbit.get_balance(ticker="KRW-BTC")))      # 비트코인 보유수량
-        time.sleep(5)
+        time.sleep(10)
+        
     except Exception as e:
         print(e)
         time.sleep(1)
