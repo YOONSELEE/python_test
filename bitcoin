@@ -54,7 +54,7 @@ while True:
         j=0
      
         
-        df = pyupbit.get_ohlcv(ticker,interval="minute1",count=num_count)
+        df = pyupbit.get_ohlcv(ticker,interval="minute5",count=num_count)
         s_mid=(df['open']+df['close'])/2
         h_mid=(df['high']+df['low'])/2
         s=[]
@@ -104,13 +104,16 @@ while True:
                 print("매수가 : ", float(format(upbit.get_amount('ALL'))))
                 print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
         elif (n==3 and m==1 and red[-1]>0 and red[-2]<0 and s_mid[-1]-s_mid[-2]>=5000 and df['high'][-2]>s_mid[-1] and float(format(upbit.get_balance(ticker="KRW")))>=6000):
-            print(now)
-            print(float(pyupbit.get_current_price(["KRW-BTC"])))
-            upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
-            buy=buy_price
-            print("매수가+수수료 : " , buy_price)
-            print("매수가 : ", float(format(upbit.get_amount('ALL'))))
-            print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+            if (df['high'][-1]-df['high'][-2]<-5000):
+                print("추가 데이터 필요")
+            else:
+                print(now)
+                upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
+                buy=buy_price
+                print(float(pyupbit.get_current_price(["KRW-BTC"])))
+                print("매수가+수수료 : " , buy_price)
+                print("매수가 : ", float(format(upbit.get_amount('ALL'))))
+                print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
 
                 
         n=0
@@ -147,23 +150,26 @@ while True:
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
+            time.sleep(300)
         elif (n==3 and m==1 and red[-1]<0 and red[-2]>0 and s_mid[-1]-s_mid[-2]<=-5000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
+            time.sleep(300)
         elif (df['high'][-1]-df['low'][-1]>=150000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
+            time.sleep(300)
             
 
         n=0
         m=0
         k=0
               
-        time.sleep(2)
+        time.sleep(20)
         
     except Exception as e:
         print(e)
