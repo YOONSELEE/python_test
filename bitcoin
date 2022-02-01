@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan 27 02:37:08 2022
+
+@author: LEE
+"""
+
 def get_balance(ticker):
     balances = upbit.get_balances()
     for b in balances:
@@ -61,6 +68,10 @@ while True:
         for i in list(range(1,num_count)):
             if (s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락세
                 n=n+1
+            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<0):
+                n=n+1
+            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>0):
+                m=m+1
             elif (red[-i]<0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]>=0):    #중점이 상승이지만 파,파 경우
                 n=n+1
             elif (red[-i]<0 and red[-i-1]>0 and 0<s_mid[-i]-s_mid[-i-1]<5000):    #중점이 상승이여도 빨,파&미미
@@ -111,13 +122,17 @@ while True:
         for i in list(range(1,num_count)):
             if (s_mid[-i]-s_mid[-i-1]>0):                      #중점이 상승세
                 n=n+1
+            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>0):
+                n=n+1
+            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<0):
+                m=m+1
             elif (red[-i]>0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]<0):     #중점이 하락이지만 빨,빨 경우
                 n=n+1
             elif (red[-i]<0 and red[-i-1]>0 and -5000<s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락이지만 빨,파 & 미미
                 n=n+1
             elif (red[-i]>0 and red[-i-1]<0 and -5000<s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락이지만 파,빨&미미
                 n=n+1
-            elif (red[-i]<0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]<0):        #중점이 하락이면서 파,파
+            elif (red[-i]<=0 and red[-i-1]<=0 and s_mid[-i]-s_mid[-i-1]<0):        #중점이 하락이면서 파,파
                 m=m+1
             elif (red[-i]<0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]<=-5000):   #중점 하락이면서 빨,파 &큰폭
                 m=m+1
@@ -127,17 +142,17 @@ while True:
                 
         if (n==4):
                 print("아직 상승중")
-        elif (n==3 & m==1 and red[-1]<0 and red[-2]<0 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.001):
+        elif (n==3 & m==1 and red[-1]<=0 and red[-2]<=0 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
-        elif (n==3 and m==1 and red[-1]<0 and red[-2]>0 and s_mid[-1]-s_mid[-2]<=-5000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.001):
+        elif (n==3 and m==1 and red[-1]<0 and red[-2]>0 and s_mid[-1]-s_mid[-2]<=-5000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
-        elif (df['high'][-1]-df['low'][-1]>=150000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.001):
+        elif (df['high'][-1]-df['low'][-1]>=150000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
@@ -148,7 +163,7 @@ while True:
         m=0
         k=0
               
-        time.sleep(10)
+        time.sleep(2)
         
     except Exception as e:
         print(e)
