@@ -81,30 +81,30 @@ while True:
                 j=j+1
                 
         if (n==4):
-                print("아직 하락중")
+                print("fall")
         elif (n==3 and m==1 and red[-1]>0 and red[-2]>0 and j<4 and float(format(upbit.get_balance(ticker="KRW")))>=6000):
             if (df['low'][-1]<df['low'][-2]):
-                print("아직 하락중")
+                print("fall")
             elif (s_mid[-1]-df['low'][-1]>=0.4):
-                print("추가 데이터 필요")
+                print("more data")
             else:
                 print(now)
                 upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
                 buy=buy_price
-                print("매수가+수수료 : " , buy_price)
-                print("매수가 : ", float(format(upbit.get_amount('ALL'))))
-                print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+                print("purchase price + fees : " , buy_price)
+                print("purchase price : ", float(format(upbit.get_amount('ALL'))))
+                print("fees : ", float(format(upbit.get_amount('ALL')))*0.0005)
         elif (n==3 and m==1 and red[-1]>0 and red[-2]<0 and s_mid[-1]-s_mid[-2]>=0.05 and float(format(upbit.get_balance(ticker="KRW")))>=6000):
             if (df['high'][-1]-df['high'][-2]<-0.05):
-                print("추가 데이터 필요")
+                print("more data")
             else:
                 print(now)
                 upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
                 buy=buy_price
                 print(float(pyupbit.get_current_price(["KRW-JST"])))
-                print("매수가+수수료 : " , buy_price)
-                print("매수가 : ", float(format(upbit.get_amount('ALL'))))
-                print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+                print("purchase price + fees : " , buy_price)
+                print("purchase price : ", float(format(upbit.get_amount('ALL'))))
+                print("fees : ", float(format(upbit.get_amount('ALL')))*0.0005)
 
                 
         n=0
@@ -131,24 +131,24 @@ while True:
                
                 
         if (n==4):
-                print("아직 상승중")
+                print("rising")
         elif (n==3 & m==1 and red[-1]<=0 and red[-2]<=0 and float(format(upbit.get_balance(ticker="KRW-JST")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
-            print(sell_cond ,"원 수익.")
-            print(sell_cond*100/buy_price,"% 수익")
+            print(sell_cond ,"won revenue")
+            print(sell_cond*100/buy_price,"% revenue")
             time.sleep(300)
         elif (n==3 and m==1 and red[-1]<0 and red[-2]>0 and s_mid[-1]-s_mid[-2]<=-0.05 and float(format(upbit.get_balance(ticker="KRW-JST")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
-            print(sell_cond ,"원 수익.")
-            print(sell_cond*100/buy_price,"% 수익")
+            print(sell_cond ,"won revenue")
+            print(sell_cond*100/buy_price,"% revenue")
             time.sleep(300)
         elif (df['high'][-1]-df['low'][-1]>=2 and float(format(upbit.get_balance(ticker="KRW-JST")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
-            print(sell_cond ,"원 수익.")
-            print(sell_cond*100/buy_price,"% 수익")
+            print(sell_cond ,"won revenue") 
+            print(sell_cond*100/buy_price,"% revenue")
             time.sleep(300)
             
 
