@@ -54,7 +54,7 @@ while True:
         j=0
      
         
-        df = pyupbit.get_ohlcv(ticker,interval="minute5",count=num_count)
+        df = pyupbit.get_ohlcv(ticker,interval="minute1",count=num_count)
         s_mid=(df['open']+df['close'])/2
         h_mid=(df['high']+df['low'])/2
         s=[]
@@ -64,64 +64,64 @@ while True:
         plus = []
         minus = []
         
-        """
-        ##매수 조건
-                for i in list(range(1,num_count)):
-                    if (s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락세
-                        n=n+1
-                    elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<0):
-                        n=n+1
-                    elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>0):
-                        m=m+1
-                    elif (red[-i]<0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]>=0):    #중점이 상승이지만 파,파 경우
-                        n=n+1
-                    elif (red[-i]<0 and red[-i-1]>0 and 0<s_mid[-i]-s_mid[-i-1]<5000):    #중점이 상승이여도 빨,파&미미
-                        n=n+1
-                    elif (red[-i]>0 and red[-i-1]<0 and 0<s_mid[-i]-s_mid[-i-1]<5000):    #중점이 상승이여도 파,빨&미미
-                        n=n+1
-                    elif (red[-i]>0 and red[-i-1]>0):                                   #중점 상승이면서 빨,빨
-                        m=m+1
-                    elif (red[-i]>0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]>=5000):   #중점 상승 이면서 파,빨&큰폭
-                        m=m+1
-                    elif (red[-i]<0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]>=5000):   #그 외 케이스(이상 현상)
-                        k=k+1
-                        
-                for i in list(range(1,num_count)):
-                    if red[i]>0:
-                        j=j+1
-                        
-                if (n==4):
-                        print("아직 하락중")
-                elif (n==3 and m==1 and red[-1]>0 and red[-2]>0 and j<4 and float(format(upbit.get_balance(ticker="KRW")))>=6000):
-                    if (df['low'][-1]<df['low'][-2]):
-                        print("아직 하락중")
-                    elif (s_mid[-1]-df['low'][-1]>=35000):
-                        print("추가 데이터 필요")
-                    else:
-                        print(now)
-                        upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
-                        buy=buy_price
-                        print("매수가+수수료 : " , buy_price)
-                        print("매수가 : ", float(format(upbit.get_amount('ALL'))))
-                        print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
-                elif (n==3 and m==1 and red[-1]>0 and red[-2]<0 and s_mid[-1]-s_mid[-2]>=5000 and df['high'][-2]>s_mid[-1] and float(format(upbit.get_balance(ticker="KRW")))>=6000):
-                    if (df['high'][-1]-df['high'][-2]<-5000):
-                        print("추가 데이터 필요")
-                    else:
-                        print(now)
-                        upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
-                        buy=buy_price
-                        print(float(pyupbit.get_current_price(["KRW-BTC"])))
-                        print("매수가+수수료 : " , buy_price)
-                        print("매수가 : ", float(format(upbit.get_amount('ALL'))))
-                        print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+
+##매수 조건
+        for i in list(range(1,num_count)):
+            if (s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락세
+                n=n+1
+            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<0):
+                n=n+1
+            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>0):
+                m=m+1
+            elif (red[-i]<0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]>=0):    #중점이 상승이지만 파,파 경우
+                n=n+1
+            elif (red[-i]<0 and red[-i-1]>0 and 0<s_mid[-i]-s_mid[-i-1]<5000):    #중점이 상승이여도 빨,파&미미
+                n=n+1
+            elif (red[-i]>0 and red[-i-1]<0 and 0<s_mid[-i]-s_mid[-i-1]<5000):    #중점이 상승이여도 파,빨&미미
+                n=n+1
+            elif (red[-i]>0 and red[-i-1]>0):                                   #중점 상승이면서 빨,빨
+                m=m+1
+            elif (red[-i]>0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]>=5000):   #중점 상승 이면서 파,빨&큰폭
+                m=m+1
+            elif (red[-i]<0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]>=5000):   #그 외 케이스(이상 현상)
+                k=k+1
+                
+        for i in list(range(1,num_count)):
+            if red[i]>0:
+                j=j+1
+                
+        if (n==4):
+                print("아직 하락중")
+        elif (n==3 and m==1 and red[-1]>0 and red[-2]>0 and j<4 and float(format(upbit.get_balance(ticker="KRW")))>=6000):
+            if (df['low'][-1]<df['low'][-2]):
+                print("아직 하락중")
+            elif (s_mid[-1]-df['low'][-1]>=35000):
+                print("추가 데이터 필요")
+            else:
+                print(now)
+                upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
+                buy=buy_price
+                print("매수가+수수료 : " , buy_price)
+                print("매수가 : ", float(format(upbit.get_amount('ALL'))))
+                print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+        elif (n==3 and m==1 and red[-1]>0 and red[-2]<0 and s_mid[-1]-s_mid[-2]>=5000 and df['high'][-2]>s_mid[-1] and float(format(upbit.get_balance(ticker="KRW")))>=6000):
+            if (df['high'][-1]-df['high'][-2]<-5000):
+                print("추가 데이터 필요")
+            else:
+                print(now)
+                upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
+                buy=buy_price
+                print(float(pyupbit.get_current_price(["KRW-BTC"])))
+                print("매수가+수수료 : " , buy_price)
+                print("매수가 : ", float(format(upbit.get_amount('ALL'))))
+                print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
+
+                
+        n=0
+        m=0
+        k=0
+        j=0
         
-                        
-                n=0
-                m=0
-                k=0
-                j=0
-        """        
 ##매도 조건
         for i in list(range(1,num_count)):
             if (s_mid[-i]-s_mid[-i-1]>0):                      #중점이 상승세
