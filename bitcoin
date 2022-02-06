@@ -97,7 +97,7 @@ while True:
                     print("매수가+수수료 : " , buy_price)
                     print("매수가 : ", float(format(upbit.get_amount('ALL'))))
                     print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
-            elif (n==3 and m==1 and gab-df['high'][-1]<=150000 and s_mid[-1]-s_mid[-2]==0 and ((df['high'][-1]+df['low'][-1])/2) - ((df['high'][-2]+df['low'][-2])/2)>0):
+            elif (n==3 and m==1 and gab-df['high'][-1]<=150000  and s_mid[-1]-s_mid[-2]==0 and ((df['high'][-1]+df['low'][-1])/2) - ((df['high'][-2]+df['low'][-2])/2)>0):
                     print(now)
                     upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
                     buy=buy_price
@@ -136,7 +136,7 @@ while True:
                 
         if (n==4):
             print("아직 상승중")
-        elif (n==3 & m==1 and red[-1]<=0 and red[-2]<=0 and gab- and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
+        elif (n==3 & m==1 and red[-1]<=0 and red[-2]<=0 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
