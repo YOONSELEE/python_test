@@ -135,7 +135,7 @@ while True:
                
                 
         if (n==4):
-                print("아직 상승중")
+            print("아직 상승중")
         elif (n==3 & m==1 and red[-1]<=0 and red[-2]<=0 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
