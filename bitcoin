@@ -51,6 +51,7 @@ while True:
         s_mid=(df['open']+df['close'])/2
         h_mid=(df['high']+df['low'])/2
         gab=max(df2['high'])
+        gab2=min(df2['low'])
         red=df['close']-df['open']  #양수면 빨강, 음수면 파랑
 
         
@@ -82,7 +83,7 @@ while True:
         if (float(format(upbit.get_balance(ticker="KRW")))>=6000):
             if (n==4):
                     print("falling")
-            elif (n==3 and m==1 and gab-df['high'][-1]<=150000 and j<3):
+            elif (n==3 and m==1 and gab-df['high'][-1]<=150000 and j<3 and gab-gab2>=200000):
                     print(now)
                     upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
                     buy=buy_price
