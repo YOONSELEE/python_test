@@ -108,14 +108,14 @@ while True:
                 if (s_mid[-i]-s_mid[-i-1]>=-5000):
                     a=a+1   #중점 미미하게 하락
                 elif (df['low'][-i]>df['low'][-i-1] and red[-i]<0):
-                    c=c+1   #중점 하락, 저점 상승, 마지막 파랑
+                    if (df['high'][-i]>df['high'][-i-1]:
+                        a=a+1  #중점 하락, 저점 상승, 마지막 파랑, 고점 상승 
                 elif (df['low'][-i]>df['low'][-i-1] and red[-i]>=0):
                     a=a+1   #중점 하락, 저점 상승, 마지막 빨강 또는 -
                 elif (df['low'][-i]<=df['low'][-i-1] and red[-i]>=0):
                     a=a+1   #중점 하락, 저점 같거나 하락, 마지막 빨강 또는 -
-                elif (df['low'][-i]<=df['low'][-i-1] and red[-i]<0):
-                    if (i==1):
-                        d=d+1   #중점 하락, 저점 같거나 하락, 마지막 파랑
+                elif (df['low'][-i]<=df['low'][-i-1] and red[-i]<0 and i==1):
+                    d=d+1   #중점 하락, 저점 같거나 하락, 마지막 파랑
  
         for i in list(range(1,num_count)):
             if red[i]<0:
@@ -142,7 +142,7 @@ while True:
         c=0
         q=0
               
-        time.sleep(5)        
+        time.sleep(2)        
     except Exception as e:
         print(e)
         time.sleep(1)
