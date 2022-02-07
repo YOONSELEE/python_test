@@ -62,7 +62,7 @@ while True:
         minus = []
         
 
-##매수 조건
+####매수 조건
         for i in list(range(1,num_count)):
             if (s_mid[-i]-s_mid[-i-1]<0):
                 n=n+1   #중점이 하락시
