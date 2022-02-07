@@ -108,7 +108,7 @@ while True:
                 if (s_mid[-i]-s_mid[-i-1]>=-5000):
                     a=a+1   #중점 미미하게 하락
                 elif (df['low'][-i]>df['low'][-i-1] and red[-i]<0):
-                    if (df['high'][-i]>df['high'][-i-1]:
+                    if (df['high'][-i]>df['high'][-i-1]):
                         a=a+1  #중점 하락, 저점 상승, 마지막 파랑, 고점 상승 
                 elif (df['low'][-i]>df['low'][-i-1] and red[-i]>=0):
                     a=a+1   #중점 하락, 저점 상승, 마지막 빨강 또는 -
