@@ -69,8 +69,11 @@ while True:
             elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<=0):
                 n=n+1   #중점 같을경우 고점저점의 중점 같거나 하락시
             elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>0):
-                if (df['low'][-i]>df['low'][-i-1]): 
-                    m=m+1   #중점 같을 경우 고점저점의 중점 상승시
+                if (df['low'][-i]>df['low'][-i-1]):
+                    if (i==1):
+                        m=m+1   #중점 같을 경우 고점저점의 중점 상승시
+                    else:
+                        k=k+1
             elif (s_mid[-i]-s_mid[-i-1]>0):
                 if (s_mid[-i]-s_mid[-i-1]>=5000):
                     n=n+1   #중점 미미하게 상승
@@ -79,9 +82,12 @@ while True:
                 elif (df['low'][-i]<df['low'][-i-1] and red[-i]<=0):
                     n=n+1   #중점 상승, 저점 하락, 마지막 파랑 또는 -
                 elif (df['low'][-i]>df['low'][-i-1] and red[-i]<=0):
-                    n=n+1   #중점 상승, 저점 같거나 상승, 마지막 파랑 또는 -
+                    k=k+1   #중점 상승, 저점 같거나 상승, 마지막 파랑 또는 -
                 elif (df['low'][-i]>df['low'][-i-1] and red[-i]>0):
-                    m=m+1   #중점 상승, 저점 같거나 상승, 마지막 빨강
+                    if (i==1):
+                        m=m+1   #중점 상승, 저점 같거나 상승, 마지막 빨강
+                    else:
+                        k=k+1
                 
         for i in list(range(1,num_count)):
             if red[i]>0:
@@ -90,23 +96,14 @@ while True:
         if (float(format(upbit.get_balance(ticker="KRW")))>=6000):
             if (n==4):
                     print("아직 하락중")
-            elif (n==3 and m==1 and gab-df['high'][-1]<=150000 and s_mid[-1]-s_mid[-2]>0 and df['low'][-1]>df['low'][-2] and red[-i]>0 and j<3):
+            elif (n==3 and m==1 and gab-df['high'][-1]<=150000 and j<3):
                     print(now)
                     upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
                     buy=buy_price
                     print("매수가+수수료 : " , buy_price)
                     print("매수가 : ", float(format(upbit.get_amount('ALL'))))
                     print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
-            elif (n==3 and m==1 and gab-df['high'][-1]<=150000  and s_mid[-1]-s_mid[-2]==0 and ((df['high'][-1]+df['low'][-1])/2) - ((df['high'][-2]+df['low'][-2])/2)>0):
-                    print(now)
-                    upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
-                    buy=buy_price
-                    print(float(pyupbit.get_current_price(["KRW-BTC"])))
-                    print("매수가+수수료 : " , buy_price)
-                    print("매수가 : ", float(format(upbit.get_amount('ALL'))))
-                    print("수수료 : ", float(format(upbit.get_amount('ALL')))*0.0005)
-
-                
+          
         n=0
         m=0
         k=0
@@ -119,7 +116,10 @@ while True:
             elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>0):
                 n=n+1
             elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<0):
-                m=m+1
+                if (n==1):
+                    m=m+1
+                else:
+                    k=k+1
             elif (red[-i]>0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]<0):     #중점이 하락이지만 빨,빨 경우
                 n=n+1
             elif (red[-i]<0 and red[-i-1]>0 and -5000<s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락이지만 빨,파 & 미미
@@ -127,23 +127,23 @@ while True:
             elif (red[-i]>0 and red[-i-1]<0 and -5000<s_mid[-i]-s_mid[-i-1]<0):  #중점이 하락이지만 파,빨&미미
                 n=n+1
             elif (red[-i]<=0 and red[-i-1]<=0 and s_mid[-i]-s_mid[-i-1]<0):        #중점이 하락이면서 파,파
-                m=m+1
+                if (n==1):
+                    m=m+1
+                else:
+                    k=k+1
             elif (red[-i]<0 and red[-i-1]>0 and s_mid[-i]-s_mid[-i-1]<=-5000):   #중점 하락이면서 빨,파 &큰폭
-                m=m+1
+                if (n==1):
+                    m=m+1
+                else:
+                    k=k+1
             elif (red[-i]>0 and red[-i-1]<0 and s_mid[-i]-s_mid[-i-1]<=-5000):   #중점 하락하면서 파,빨&큰폭
                 k=k+1
                
                 
         if (n==4):
             print("아직 상승중")
-        elif (n==3 & m==1 and red[-1]<=0 and red[-2]<=0 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
+        elif (n==3 & m==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
             print(now)                
-            upbit.sell_market_order(ticker,get_balance(ticker_origin))
-            print(sell_cond ,"원 수익.")
-            print(sell_cond*100/buy_price,"% 수익")
-            time.sleep(300)
-        elif (n==3 and m==1 and red[-1]<0 and red[-2]>0 and s_mid[-1]-s_mid[-2]<=-5000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
-            print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
