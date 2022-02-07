@@ -142,13 +142,13 @@ while True:
                 
         if (n==4):
             print("아직 상승중")
-        elif (n==3 & m==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
+        elif (n==3 & m==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.00025):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
             print(sell_cond*100/buy_price,"% 수익")
             time.sleep(300)
-        elif (df['high'][-1]-df['low'][-1]>=150000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.0005):
+        elif (df['high'][-1]-df['low'][-1]>=150000 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.00025):
             print(now)            
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"원 수익.")
