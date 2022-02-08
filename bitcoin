@@ -98,25 +98,19 @@ while True:
         
 ##매도 조건
         for i in list(range(1,num_count)):
-            if (s_mid[-i]-s_mid[-i-1]>0):
-                a=a+1   #중점이 상승시
-            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)>=0):
-                a=a+1   #중점 같을경우 고점저점의 중점 같거나 상승시
-            elif (s_mid[-i]-s_mid[-i-1]==0 and ((df['high'][-i]+df['low'][-i])/2) - ((df['high'][-i-1]+df['low'][-i-1])/2)<0):
-                if (i==1 and red[-1]<0):
-                    d=d+1   #중점 같을 경우 고점저점의 중점 하락시 & 최근이 파랑
-            elif (s_mid[-i]-s_mid[-i-1]<0):
-                if (s_mid[-i]-s_mid[-i-1]>=-5000):
-                    a=a+1   #중점 미미하게 하락
-                elif (df['low'][-i]>df['low'][-i-1] and red[-i]<0):
-                    if (df['high'][-i]>df['high'][-i-1]):
-                        a=a+1  #중점 하락, 저점 상승, 마지막 파랑, 고점 상승 
-                elif (df['low'][-i]>df['low'][-i-1] and red[-i]>=0):
-                    a=a+1   #중점 하락, 저점 상승, 마지막 빨강 또는 -
-                elif (df['low'][-i]<=df['low'][-i-1] and red[-i]>=0):
-                    a=a+1   #중점 하락, 저점 같거나 하락, 마지막 빨강 또는 -
-                elif (df['low'][-i]<=df['low'][-i-1] and red[-i]<0 and i==1):
-                    d=d+1   #중점 하락, 저점 같거나 하락, 마지막 파랑
+            if (s_mid[-i]-s_mid[-i-1]>=0):
+                a=a+1   #중점이 같거나 상승시
+            elif (s_mid[-i]-s_mid[-i-1]<0): ## 중점 하락
+                if (s_mid[-i]-s_mid[-i-1]>=-5000): ## 중점 미미하게 하락
+                    a=a+1
+                elif (s_mid[-i]-s_mid[-i-1]<-5000 and red[-i]>0):  #일정 이상 하락하면서 빨강
+                    a=a+1
+                elif (s_mid[-i]-s_mid[-i-1]<-5000 and red[-i]<=0):  #일정 이상 하락하면서 파랑,-
+                    if i==1:
+                        d=d+1
+                    else:
+                        c=c+1
+
  
         for i in list(range(1,num_count)):
             if red[i]<0:
