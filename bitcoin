@@ -111,11 +111,11 @@ while True:
                     
         if (d>=1 and s_mid[-1]-s_mid[-2]<-5000 and red[-1]<=0):
             dd=1
-        elif (d>=1 and s_mid[-2]-s_mid[-3]<-5000 and red[-2]<=0):
+        if (d>=1 and s_mid[-2]-s_mid[-3]<-5000 and red[-2]<=0):
             c=1
-        elif (d>=1 and s_mid[-3]-s_mid[-4]<-5000 and red[-3]<=0):
+        if (d>=1 and s_mid[-3]-s_mid[-4]<-5000 and red[-3]<=0):
             c=1
-        elif (d>=1 and s_mid[-4]-s_mid[-5]<-5000 and red[-4]<=0):
+        if (d>=1 and s_mid[-4]-s_mid[-5]<-5000 and red[-4]<=0):
             c=1
  
         for i in list(range(1,num_count)):
@@ -126,14 +126,14 @@ while True:
             print(now)
             print("rising")
             print("a=",a ,"d=",d,"c=",c,"q=",q,"dd=",dd)
-        elif (a==3 & dd==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.00025):
+        elif (a==3 and dd==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.00025):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"won up")
             print(sell_cond*100/buy_price,"% up")
             print("a=",a ,"d=",d,"c=",c,"q=",q,"dd=",dd)
             time.sleep(300)
-        elif (a==2 & dd==1 & c==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.00025):
+        elif (a==2 and dd==1 and c==1 and float(format(upbit.get_balance(ticker="KRW-BTC")))>0.0001 and sell_cond/buy_price>0.00025):
             print(now)                
             upbit.sell_market_order(ticker,get_balance(ticker_origin))
             print(sell_cond ,"won up")
