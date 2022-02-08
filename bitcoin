@@ -84,7 +84,7 @@ while True:
         if (float(format(upbit.get_balance(ticker="KRW")))>=6000):
             if (n==4):
                     print("falling")
-            elif (n==3 and m==1 and j<3 and gab-gab2>=200000): # and gab-df['high'][-1]<=150000최근 15개 고가/저가 차이가 20만 이상, 최근15개 고가와 현재 고가 차이가 15만 이하
+            elif (n==3 and m==1 and j<3 and gab-gab2>=200000 and gab-df['high'][-1]<=150000): # 최근 15개 고가/저가 차이가 20만 이상, 최근15개 고가와 현재 고가 차이가 15만 이하
                     print(now)
                     upbit.buy_market_order(ticker,get_balance("KRW")*0.9994)
                     buy=buy_price
@@ -155,7 +155,7 @@ while True:
         c=0
         q=0
         
-        time.sleep(1.5)
+        time.sleep(3)
        
     except Exception as e:
         print(e)
