@@ -9,7 +9,7 @@ def get_balance(ticker):
 
 
     
-##half-half
+#half-half
 #def half_half(Ticker):
 import time
 import pyupbit
